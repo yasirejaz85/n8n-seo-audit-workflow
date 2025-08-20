@@ -48,3 +48,5 @@ Update credentials/API keys (if required)
 Run the workflow and provide target URLs
 
 Get the audit results in CSV/JSON format
+
+📧 [See example SEO audit output](/sample-seo-audit.md)
