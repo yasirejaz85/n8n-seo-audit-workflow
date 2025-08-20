@@ -1,0 +1,309 @@
+{
+  "name": "My workflow 3",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Conversion Rate Optimizer",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Landing Page URL",
+              "placeholder": "http://yuzzu.co",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -752,
+        48
+      ],
+      "id": "dcb46a95-dc80-4606-ba0a-7d5baf33818a",
+      "name": "On form submission",
+      "webhookId": "7b35d576-84a4-4e77-b7c0-958c0f72916c"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json[\"Landing Page URL\"] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -608,
+        48
+      ],
+      "id": "cb05a6f4-a43f-447d-a9e1-f58ed22fe62a",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are the best SEO Manager in the country—a world-class expert in optimizing websites to rank on Google.\nIn this task, you will analyze the HTML code of a webpage and perform a detailed and structured On-Page Technical SEO Audit.\n\nAudit Structure\nYou will review all technical SEO aspects of the page. Once completed, you will present your findings and recommendations in clear, organized bullet points, categorized into three sections:\n\nCritical Issues — Must be fixed immediately.\n\nQuick Wins — Easy fixes with a big impact.\n\nOpportunities for Improvement — Require more effort but offer potential benefits.\n\nEnsure the output is properly formatted, clean, and highly readable. Do not include any introductory or explanatory text—only the audit findings.\n\nHere is the content of my landing page :\n {{ $json.data }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -400,
+        400
+      ],
+      "id": "36bac073-90db-47a4-9e6d-06b7bc181cf8",
+      "name": "Technical Audit"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=\nYou are the best SEO Manager in the country—a world-class expert in optimizing websites to rank on Google.\n\nIn this task, you will analyze the content of the webpage and perform a detailed and structured SEO Content Audit.\n\nAudit Structure\nYou will divide your audit in 2 parts:\n\nThe first part is the Analysis\n\nThe second is the Recommendations\n\nIn the Analysis, you will include:\n\nContent Quality Assessment — Evaluate the content’s overall quality, accuracy, and relevance to the target audience.\n\nKeyword Research and Analysis — Identify primary and secondary keywords, keyword density, and keyword placement strategies.\n\nReadability Analysis — Assess the content’s readability score using metrics such as Flesch-Kincaid Grade Level, Flesch Reading Ease, and Gunning-Fog Index.\n\nIn the Recommendations, you will present your recommendations and actionable suggestions in clear, organized bullet points. Recommendations must improve the rankings in Google but also the user engagement.\n\nEnsure the output is properly formatted, clean, and highly readable. Do not include any introductory or explanatory text—only the audit findings.\n\n\n\n\nHere is the content of my landing page : {{ $json.data }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -400,
+        48
+      ],
+      "id": "721a5cc8-5bb7-4129-9e61-127573d23d16",
+      "name": "Content Audit"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        16,
+        208
+      ],
+      "id": "e34450ee-3a34-4e78-932f-a9342b89d2c6",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -432,
+        560
+      ],
+      "id": "3db55061-475a-446a-9db1-ac8c3266149c",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "G4RMmmxJQJN0T2lO",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "output"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        224,
+        208
+      ],
+      "id": "5ed6877d-6b38-4bcc-a728-dfa363c2fb83",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "mode": "markdownToHtml",
+        "markdown": "=#on page Technical Audit {{ $json.output[0]}}\n\n#on page seo content audit\n{{ $json.output[1] }}\n\n\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.markdown",
+      "typeVersion": 1,
+      "position": [
+        432,
+        208
+      ],
+      "id": "bf6ebb06-28e4-4eaa-9f90-d8d82db696ad",
+      "name": "Markdown"
+    },
+    {
+      "parameters": {
+        "sendTo": "umaima.data.analyst@gmail.com",
+        "subject": "=On Page SEO Audit  {{ $('On form submission').item.json['Landing Page URL'] }}",
+        "message": "={{ $json.data }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        640,
+        208
+      ],
+      "id": "89208975-522b-4edf-bbc1-025d067f69cc",
+      "name": "Send a message",
+      "webhookId": "7890130b-3ee6-4675-a551-65db2e465ad0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "RO96rKRY3aWyEDLT",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -384,
+        240
+      ],
+      "id": "3163efd5-9d1f-4202-8412-7c3238066393",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "G4RMmmxJQJN0T2lO",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Content Audit",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Technical Audit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Content Audit": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Technical Audit": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Technical Audit",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Markdown",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Markdown": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Content Audit",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2f75a69e-3b1b-492b-a05c-09b02353a038",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e0b3dde5db3ede9106b961d7e9fdc4e4b26bcc84277b7dd2b546aab8d750487a"
+  },
+  "id": "6JrLO4Vpa7gmCaiU",
+  "tags": []
+}
