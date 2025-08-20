@@ -1,11 +1,11 @@
-# n8n-seo-audit-workflow
+# N8n-seo-audit-workflow
 Automated on-page SEO audit using n8n. This workflow analyzes meta tags, headings, keywords, broken links, and page speed, then generates structured SEO reports in CSV/JSON format. A no-code/low-code solution for automating SEO checks and improving website optimization.
 
-On-Page SEO Audit Automation (n8n)
+# On-Page SEO Audit Automation (n8n)
 
 This project automates on-page SEO auditing using n8n workflows. It extracts website data, checks SEO health (meta tags, keywords, headings, links, performance, etc.), and generates structured reports automatically.
 
-🚀 Features
+# 🚀 Features
 
 Automated meta tag and keyword checks
 
@@ -19,7 +19,7 @@ Option to export results as CSV/JSON reports
 
 Fully automated with n8n workflow JSON
 
-🛠️ Tech Stack
+# 🛠️ Tech Stack
 
 n8n (workflow automation)
 
@@ -27,9 +27,9 @@ APIs (Google PageSpeed Insights, SEO analyzers, or custom parsers)
 
 JavaScript/Python functions inside n8n (optional for extra logic)
 
-CSV/JSON output
+Email output
 
-📂 Project Structure
+# 📂 Project Structure
 
 workflow.json → n8n workflow export
 
@@ -39,7 +39,7 @@ samples/ → example reports (CSV/JSON)
 
 docs/ → workflow screenshots & usage guide
 
-⚡ How to Use
+# ⚡ How to Use
 
 Import workflow.json into your n8n instance
 
@@ -47,6 +47,6 @@ Update credentials/API keys (if required)
 
 Run the workflow and provide target URLs
 
-Get the audit results in CSV/JSON format
+Get the audit results in on the given email address.
 
 📧 [See example SEO audit output](/sample-seo-audit.md)
